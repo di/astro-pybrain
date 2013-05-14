@@ -15,11 +15,11 @@ def make_dataset():
     data = SupervisedDataSet(3, 1)
 
     print "Adding valid data"
-    for i in glob.glob("./valid/*.jpg"):
+    for i in glob.glob("./training_data/valid/*.jpg"):
         data.addSample(functions.function(i), [1])
 
     print "Adding invalid data"
-    for i in glob.glob("./invalid/*.jpg"):
+    for i in glob.glob("./training_data/invalid/*.jpg"):
         data.addSample(functions.function(i), [0])
 
     return data
@@ -41,14 +41,14 @@ def training(d, iteratons):
 
 def test(net, cutoff):
     print "Testing"
-    for path in glob.glob("./test/*.jpg"):
+    for path in glob.glob("./test_data/*.jpg"):
         val = net.activate(functions.function(path))
         if val > cutoff:
             print path, val, "(Valid)"
-            shutil.move(path, './test/valid/' + os.path.basename(path))
+            shutil.move(path, './test_data/valid/' + os.path.basename(path))
         else:
             print path, val, "(Invalid)"
-            shutil.move(path, './test/invalid/' + os.path.basename(path))
+            shutil.move(path, './test_data/invalid/' + os.path.basename(path))
 
 if __name__ == "__main__":
     try:
