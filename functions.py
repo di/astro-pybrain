@@ -2,7 +2,6 @@
 import Image
 import colorsys
 import glob
-import os
 import sys
 import math
 import matplotlib
@@ -31,10 +30,6 @@ def _plot(res, idx, xyz_np, i=0):
     pylab.plot(res[:, 0], res[:, 1], 'ro')
     pylab.savefig("clust-%d.png" % (i))
     pylab.close()
-
-
-def function(filename):
-    return values(Image.open(filename))
 
 
 def mean_distance(res, idx, xyz, _max=5):
@@ -87,7 +82,8 @@ def hue_ratio(im, val_min=.25, val_max=.90):
         return float(a_c + b_c) / float(a_c + b_c + c_c), xyz
 
 
-def values(im, val_min=.25, val_max=.90):
+def values(filename, val_min=.25, val_max=.90):
+    im = Image.open(filename)
     dist_min = sys.maxint
     collin_min = sys.maxint
 
@@ -107,5 +103,5 @@ def values(im, val_min=.25, val_max=.90):
     return [hue_rat, collin_min, dist_min]
 
 if __name__ == "__main__":
-    for i in glob.glob("./invalid/272.jpg"):
-        print i, function(i)
+    for i in glob.glob("./training_data/invalid/272.jpg"):
+        print i, values(i)

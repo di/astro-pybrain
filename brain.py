@@ -2,8 +2,8 @@
 from pybrain.datasets import SupervisedDataSet
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.supervised import BackpropTrainer
+from glob import glob
 import functions
-import glob
 import warnings
 import pickle
 import shutil
@@ -14,19 +14,19 @@ warnings.filterwarnings('ignore')
 def make_dataset():
     data = SupervisedDataSet(3, 1)
 
-    print "Adding valid data"
-    for i in glob.glob("./training_data/valid/*.jpg"):
-        data.addSample(functions.function(i), [1])
+    print("Adding valid training data")
+    for i in glob("./training_data/valid/*.jpg"):
+        data.addSample(functions.values(i), [1])
 
-    print "Adding invalid data"
-    for i in glob.glob("./training_data/invalid/*.jpg"):
-        data.addSample(functions.function(i), [0])
+    print("Adding invalid training data")
+    for i in glob("./training_data/invalid/*.jpg"):
+        data.addSample(functions.values(i), [0])
 
     return data
 
 
-def training(d, iteratons):
-    print "Training"
+def train_network(d, iterations):
+    print("Training")
     n = buildNetwork(d.indim, 4, d.outdim, bias=True)
     t = BackpropTrainer(
         n,
@@ -40,9 +40,9 @@ def training(d, iteratons):
 
 
 def test(net, cutoff):
-    print "Testing"
-    for path in glob.glob("./test_data/*.jpg"):
-        val = net.activate(functions.function(path))
+    print("Testing")
+    for path in glob("./test_data/*.jpg"):
+        val = net.activate(functions.values(path))
         if val > cutoff:
             print path, val, "(Valid)"
             shutil.move(path, './test_data/valid/' + os.path.basename(path))
@@ -56,8 +56,7 @@ if __name__ == "__main__":
         net = pickle.load(f)
         f.close()
     except:
-        trainingdata = make_dataset()
-        net = training(trainingdata, iterations=5000)
+        net = train_network(make_dataset(), iterations=5000)
         f = open('_learned', 'w')
         pickle.dump(net, f)
         f.close()
