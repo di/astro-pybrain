@@ -1,4 +1,6 @@
-# astro
+# astro-pybrain
+
+**Update:** See this project updated to use TensorFlow here: https://github.com/di/astro-tf
 
 Detecting Asteroids with Neural Networks, as presented at the May 2013 Philly PUG meetup.
 
